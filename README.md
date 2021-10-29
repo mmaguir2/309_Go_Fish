@@ -1,7 +1,7 @@
 # 309_Go_Fish
 Team Vector
 Group memebers: 
-Maritza Aguirre-Diaz, Spenser Geideman, Tyler
+Maritza Aguirre-Diaz, Spenser Geideman, Tyler Karpowich
 
 Game modeled in the code: Go Fish
 
