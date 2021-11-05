@@ -80,10 +80,12 @@ public:
             return false;//can't remove, empty deck
         }else{//not empty list
             cardNode *tmp = head;
-            head = head ->next;
+            head = tmp ->next;
+            tmp->next = nullptr;
+            delete tmp;
             if(head == nullptr)//now an empty list
                 tail = nullptr;
-            delete tmp;
+
             return true;//was able to remove
         }
     }
@@ -118,7 +120,7 @@ public:
     //can use inherited insert
 
     //insert seven cards from deck into player hands
-    void deal(Deck globalDeck) {
+    void deal(Deck &globalDeck) {
         for(int i = 0; i < 7; i++){//insert seven times from deck
             char value = globalDeck.peek()->number;
             char suit = globalDeck.peek()->suit;
@@ -129,7 +131,7 @@ public:
         }
     }
     //draw one card from deck, print value drawn
-    bool draw(Deck globalDeck) {
+    bool draw(Deck &globalDeck) {
         //check if empty deck
         if(globalDeck.peek() == nullptr){
             cout << "empty deck" << endl;
@@ -201,25 +203,3 @@ public:
         return false;
     }
 };
-int main() {
-    Deck gameDeck;
-    gameDeck.insertCard('5', 's');
-    gameDeck.insertCard('1', 'h');
-    gameDeck.insertCard('8', 'c');
-    gameDeck.insertCard('K', 's');
-    gameDeck.insertCard('5', 'h');
-    gameDeck.insertCard('A', 'c');
-    gameDeck.insertCard('J', 'd');
-    gameDeck.insertCard('3', 'h');
-    cout << "deck: ";
-    gameDeck.printList();
-    playerHands player1;
-    //test remove, find, draw, deal
-    player1.deal(gameDeck);
-    cout<< endl << "player1: ";
-    player1.printList();
-
-    cout << endl << "deck: ";
-    gameDeck.printList();
-    return 0;
-}
