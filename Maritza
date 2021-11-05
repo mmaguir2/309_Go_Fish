@@ -19,13 +19,45 @@ public:
         tail = nullptr;
     }
     //destructor
-    ~Deck(){}
+    ~Deck(){
+        while(!empty()){
+            //remove card from head only if not an empty list
+            if (head == nullptr){//empty list
+                //do nothing
+            }else{//not empty list
+                cardNode *tmp = head;
+                head = head ->next;
+                if(head == nullptr)//now an empty list
+                    tail = nullptr;
+                delete tmp;
+            }
+        }
+    }
     //copy constructor
     Deck(const Deck& other){
-
+        head = nullptr;
+        tail = nullptr;
+        cardNode * tmp = other.head;
+        while(tmp){
+            insertCard(tmp->number, tmp->suit);
+            tmp = tmp->next;
+        }
     }
     //copy assignment operator
-    Deck& operator = (const Deck &other){}
+    Deck& operator=(const Deck &other){
+        //if assigning to the same object do nothing
+        if(this == &other){
+            return *this;
+        }
+        head = nullptr;
+        tail = nullptr;
+        cardNode * tmp = other.head;
+        while(tmp){
+            insertCard(tmp->number, tmp->suit);
+            tmp = tmp->next;
+        }
+        return *this;
+    }
     //deck only has to insert at the tail
     void insertCard(int number, char suit){
         cardNode * newCard = new cardNode(number, suit);
@@ -60,14 +92,20 @@ public:
         //head is always at the top of the deck
         return head;
     }
-
+    bool empty(){
+        return this->head == nullptr;
+    }
 };
 
 class playerHands: public Deck {
 protected:
 public:
     //default constructor
-    playerHands(){}
+    playerHands(){
+    head = nullptr;
+    tail = nullptr;
+    }
+    
     //can use inherited insert
 
     //insert seven cards from deck into player hands
