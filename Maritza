@@ -69,10 +69,7 @@ public:
     //default constructor
     playerHands(){}
     //can use inherited insert
-    //need to override inherited remove
-    bool remove(int number, char suit){
-    //can remove from anywhere in linked list
-    }
+
     //insert seven cards from deck into player hands
     void deal(Deck globalDeck) {
         for(int i = 0; i < 8; i++){//insert seven times from deck
@@ -103,16 +100,56 @@ public:
     }
     
     //need to find Card from each players hand
+    //find function only looks at number value and not suit since
+    //number value is what creates a match in GoFish
     bool find(playerHands otherPlayer, int numberToFind) {
-        //start iterating at tmp
+        //start iterating at beginning of players list
         cardNode * tmp = otherPlayer.head;
         while(tmp->next != nullptr){
             if(tmp->number == numberToFind){
                 //return true if found
+                delete tmp;
                 return true;
             }
             tmp = tmp->next;
         }
+        //return false if not found
+        return false;
+    }
+
+    //need to override inherited remove
+    bool remove(int numberToRemove, char suitToRemove){
+        //can remove from anywhere in linked list
+        cardNode *tmp = this->head;
+        cardNode * previous = nullptr;
+        while(tmp->next != nullptr){//loop through list until node is found
+            if((tmp->number == numberToRemove) &&
+            (tmp->suit == suitToRemove)){
+                //card found now remove it
+
+                if(tmp == head) {//remove head
+                    if (tmp == tail) {//removing last node in the list
+                        head = tail = nullptr;
+                    }else{
+                        head = tmp->next;
+                    }
+                }else if(tmp == tail){//remove tail
+                    tail = previous;
+                    tail->next = nullptr;
+                }else{//remove middle
+                    previous->next = tmp->next;
+                }
+                delete tmp;
+                return true;
+            }
+            //increment tmp and previous
+            previous = tmp;
+            tmp = tmp->next;
+        }
+        //delete nodes created
+        delete tmp;
+        previous = nullptr;
+        delete previous;
         //return false if not found
         return false;
     }
