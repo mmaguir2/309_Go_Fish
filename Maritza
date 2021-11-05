@@ -103,9 +103,16 @@ public:
     }
     
     //need to find Card from each players hand
-    bool find(int number) {
-        //return true if found
-        return true;
+    bool find(playerHands otherPlayer, int numberToFind) {
+        //start iterating at tmp
+        cardNode * tmp = otherPlayer.head;
+        while(tmp->next != nullptr){
+            if(tmp->number == numberToFind){
+                //return true if found
+                return true;
+            }
+            tmp = tmp->next;
+        }
         //return false if not found
         return false;
     }
