@@ -1,0 +1,92 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Game {
+public:
+  int numPlayers = 3;
+  int currentPlayer = 0;
+  bool gameIsOver = false;
+  std::vector<ConsolePlayer> players;
+  
+  void main() {
+    for(int i = 0; i < numPlayers; i++) {
+      players.push_back(ConsolePlayer(this));
+    }
+    
+    while (!gameIsOver) {
+      takeTurn(currentlyPlayingPlayer());
+      currentPlayer = (currentPlayer + 1) % (numPlayers);
+    }
+  }
+  
+  Player currentlyPlayingPlayer() {
+    return getPlayerAtIndex(currentPlayer);
+  }
+  
+  Player getPlayerAtIndex(int index) {
+    return players.at(index);
+  }
+  
+  void endGame() {
+    isGameOver = true;
+  }
+  
+  void takeTurn(Player playing) {
+    cout << "Player " << to_string(currentPlayer) << ", select a player to ask.";
+    // Read input
+    int playerToAsk = 1;
+    if(playerToAsk > numPlayers - 1 || playerToAsk < 0) {
+      cout << "gimme a real value";
+      takeTurn(playing);
+      return;
+    }
+    
+    ask(playing, getPlayerAtIndex(playerToAsk));
+  }
+  
+  void ask(Player asking, Player asked) {
+    isGameOver = true;
+  }
+};
+
+class Player {
+public:
+  Game* game;
+  virtual void ask(Player other);
+  virtual Hand getHand();
+};
+
+class ConsolePlayer : public Player {
+public:
+  Game* game;
+  Hand myHand = Hand();
+  ConsolePlayer(Game* game) {
+    this->game = game;
+  }
+  void init() {
+    myHand.deal();
+  }
+  
+  Hand getHand(){
+    return myHand;
+  }
+  
+  void ask(Player other) {
+    std::cout << "Name a card u have";
+    // wait for input
+    string response = "2";
+    // parse string into int
+    int responseAsInt = 2;
+    if(other.getHand().find(responseAsInt)) {
+      cout << "found the card";
+      other.getHand().remove(responseAsInt);
+      this->getHand().insert(responseAsInt);
+    } else {
+      cout << "didn't find the card";
+      this->getHand().draw();
+    }
+  }
+};
