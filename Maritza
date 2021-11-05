@@ -26,8 +26,8 @@ public:
     }
     //copy assignment operator
     Deck& operator = (const Deck &other){}
-//deck only has to insert at the tail
-void insertCard(int number, char suit){
+    //deck only has to insert at the tail
+    void insertCard(int number, char suit){
         cardNode * newCard = new cardNode(number, suit);
         if(head == nullptr){//empty deck
         head = tail = newCard;
@@ -77,17 +77,18 @@ public:
     //draw one card from deck, print value drawn
     bool draw(Deck globalDeck) {
         //check if empty deck
-        if(globalDeck.peek()== nullptr){
+        if(globalDeck.peek() == nullptr){
             cout << "empty deck" << endl;
             return false;
         }else{//not empty deck
             //create new card node to insert into players hands
-            cardNode *cardDrawn = globalDeck.peek();
+            int num = globalDeck.peek()->number;
+            char suit = globalDeck.peek()->suit;
             //insert drawn card into player hands
-            this->insertCard(cardDrawn->number, cardDrawn->suit);
+            this->insertCard(num, suit);
             //remove drawn card from deck
             globalDeck.removeCard();
-            delete cardDrawn;
+            return true;
         }
     }
     
