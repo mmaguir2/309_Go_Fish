@@ -5,8 +5,8 @@ protected:
     //our deck and players hands will be a linked list
     class cardNode{//card has a number and suit
     public:
-        cardNode(int n, char s):number(n), suit(s), next(nullptr){}
-        int number;
+        cardNode(char n, char s):number(n), suit(s), next(nullptr){}
+        char number;
         char suit;
         cardNode* next;
     };
@@ -59,8 +59,8 @@ public:
         return *this;
     }
     //deck only has to insert at the tail
-    void insertCard(int number, char suit){
-        cardNode * newCard = new cardNode(number, suit);
+    void insertCard(char value, char suit){
+        cardNode * newCard = new cardNode(value, suit);
         if(head == nullptr){//empty deck
         head = tail = newCard;
         }else{//not empty deck
@@ -88,13 +88,22 @@ public:
         }
     }
     //need a peek function to know what the values of the card on the top are
-    cardNode* peek(){
+    cardNode* peek(){//cant call peek on empty list
         //head is always at the top of the deck
         return head;
     }
     bool empty(){
         return this->head == nullptr;
     }
+    void printList(){
+        cardNode * tmp = head;
+        while(tmp){
+            cout << tmp->number << tmp->suit << ", " ;
+            tmp = tmp->next;
+        }
+        cout << endl;
+    }
+
 };
 
 class playerHands: public Deck {
@@ -105,16 +114,16 @@ public:
     head = nullptr;
     tail = nullptr;
     }
-    
+
     //can use inherited insert
 
     //insert seven cards from deck into player hands
     void deal(Deck globalDeck) {
-        for(int i = 0; i < 8; i++){//insert seven times from deck
-            int num = globalDeck.peek()->number;
+        for(int i = 0; i < 7; i++){//insert seven times from deck
+            char value = globalDeck.peek()->number;
             char suit = globalDeck.peek()->suit;
             //insert drawn card into player hands
-            this->insertCard(num, suit);
+            this->insertCard(value, suit);
             //remove drawn card from deck
             globalDeck.removeCard();
         }
@@ -127,10 +136,10 @@ public:
             return false;
         }else{//not empty deck
             //create new card node to insert into players hands
-            int num = globalDeck.peek()->number;
+            char value = globalDeck.peek()->number;
             char suit = globalDeck.peek()->suit;
             //insert drawn card into player hands
-            this->insertCard(num, suit);
+            this->insertCard(value, suit);
             //remove drawn card from deck
             globalDeck.removeCard();
             return true;
@@ -140,11 +149,11 @@ public:
     //need to find Card from each players hand
     //find function only looks at number value and not suit since
     //number value is what creates a match in GoFish
-    bool find(playerHands otherPlayer, int numberToFind) {
+    bool find(playerHands otherPlayer, char valueToFind) {
         //start iterating at beginning of players list
         cardNode * tmp = otherPlayer.head;
         while(tmp->next != nullptr){
-            if(tmp->number == numberToFind){
+            if(tmp->number == valueToFind){
                 //return true if found
                 delete tmp;
                 return true;
@@ -156,12 +165,12 @@ public:
     }
 
     //need to override inherited remove
-    bool remove(int numberToRemove, char suitToRemove){
+    bool remove(char valueToRemove, char suitToRemove){
         //can remove from anywhere in linked list
         cardNode *tmp = this->head;
         cardNode * previous = nullptr;
         while(tmp->next != nullptr){//loop through list until node is found
-            if((tmp->number == numberToRemove) &&
+            if((tmp->number == valueToRemove) &&
             (tmp->suit == suitToRemove)){
                 //card found now remove it
 
@@ -193,6 +202,24 @@ public:
     }
 };
 int main() {
+    Deck gameDeck;
+    gameDeck.insertCard('5', 's');
+    gameDeck.insertCard('1', 'h');
+    gameDeck.insertCard('8', 'c');
+    gameDeck.insertCard('K', 's');
+    gameDeck.insertCard('5', 'h');
+    gameDeck.insertCard('A', 'c');
+    gameDeck.insertCard('J', 'd');
+    gameDeck.insertCard('3', 'h');
+    cout << "deck: ";
+    gameDeck.printList();
+    playerHands player1;
+    //test remove, find, draw, deal
+    player1.deal(gameDeck);
+    cout<< endl << "player1: ";
+    player1.printList();
 
+    cout << endl << "deck: ";
+    gameDeck.printList();
     return 0;
 }
