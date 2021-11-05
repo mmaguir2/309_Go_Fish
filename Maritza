@@ -1,0 +1,105 @@
+#include <iostream>
+using namespace std;
+class Deck{
+protected:
+    //our deck and players hands will be a linked list
+    class cardNode{//card has a number and suit
+    public:
+        cardNode(int n, char s):number(n), suit(s), next(nullptr){}
+        int number;
+        char suit;
+        cardNode* next;
+    };
+    cardNode *head;
+    cardNode *tail;
+public:
+    //default constructor
+    Deck(){
+        head = nullptr;
+        tail = nullptr;
+    }
+    //destructor
+    ~Deck(){}
+    //copy constructor
+    Deck(const Deck& other){
+
+    }
+    //copy assignment operator
+    Deck& operator = (const Deck &other){}
+//deck only has to insert at the tail
+void insertCard(int number, char suit){
+        cardNode * newCard = new cardNode(number, suit);
+        if(head == nullptr){//empty deck
+        head = tail = newCard;
+        }else{//not empty deck
+            //only need to append at the end of the deck
+            tail->next = newCard;
+            tail = newCard;
+        }
+    }
+    //deck only has to remove from the head since players draw from top
+    //but playerHands can remove from anywhere in the players group of cards
+    // so removeCard will have to be overridden. This is why we are making
+    // removeCard virtual.
+    virtual bool removeCard() {
+        //remove card from head only if not an empty list
+        if (head == nullptr){//empty list
+            //do nothing
+            return false;//can't remove, empty deck
+        }else{//not empty list
+            cardNode *tmp = head;
+            head = head ->next;
+            if(head == nullptr)//now an empty list
+                tail = nullptr;
+            delete tmp;
+            return true;//was able to remove
+        }
+    }
+    //need a peek function to know what the values of the card on the top are
+    cardNode* peek(){
+        //head is always at the top of the deck
+        return head;
+    }
+
+};
+
+class playerHands: public Deck {
+protected:
+public:
+    playerHands(){}
+    //can use inherited insert
+    //need to override inherited remove
+    bool remove(int number, char suit){
+    //can remove from anywhere in linked list
+    }
+    //insert seven cards from deck into player hands
+    void deal() {}
+    //draw one card from deck, print value drawn
+    bool draw(Deck globalDeck) {
+        //check if empty deck
+        if(globalDeck.peek()== nullptr){
+            cout << "empty deck" << endl;
+            return false;
+        }else{//not empty deck
+            //create new card node to insert into players hands
+            cardNode *cardDrawn = globalDeck.peek();
+            //insert drawn card into player hands
+            this->insertCard(cardDrawn->number, cardDrawn->suit);
+            //remove drawn card from deck
+            globalDeck.removeCard();
+            delete cardDrawn;
+        }
+    }
+    
+    //need to find Card from each players hand
+    bool find(int number) {
+        //return true if found
+        return true;
+        //return false if not found
+        return false;
+    }
+};
+int main() {
+
+    return 0;
+}
