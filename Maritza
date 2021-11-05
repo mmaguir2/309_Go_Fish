@@ -66,6 +66,7 @@ public:
 class playerHands: public Deck {
 protected:
 public:
+    //default constructor
     playerHands(){}
     //can use inherited insert
     //need to override inherited remove
@@ -73,7 +74,16 @@ public:
     //can remove from anywhere in linked list
     }
     //insert seven cards from deck into player hands
-    void deal() {}
+    void deal(Deck globalDeck) {
+        for(int i = 0; i < 8; i++){//insert seven times from deck
+            int num = globalDeck.peek()->number;
+            char suit = globalDeck.peek()->suit;
+            //insert drawn card into player hands
+            this->insertCard(num, suit);
+            //remove drawn card from deck
+            globalDeck.removeCard();
+        }
+    }
     //draw one card from deck, print value drawn
     bool draw(Deck globalDeck) {
         //check if empty deck
