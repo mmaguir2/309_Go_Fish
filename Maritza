@@ -1,12 +1,25 @@
 #include <iostream>
+#include <random>
+#include <stdlib.h>
+#include <ctime>
 using namespace std;
+//define face cards
+#define JACK    11
+#define QUEEN   12
+#define KING    13
+#define ACE     1
+//define suits
+#define HEARTS 'h'
+#define SPADES 's'
+#define DIAMONDS 'd'
+#define CLUBS 'c'
 class Deck{
 protected:
     //our deck and players hands will be a linked list
     class cardNode{//card has a number and suit
     public:
-        cardNode(char n, char s):number(n), suit(s), next(nullptr){}
-        char number;
+        cardNode(int n, char s):number(n), suit(s), next(nullptr){}
+        int number;
         char suit;
         cardNode* next;
     };
@@ -58,8 +71,69 @@ public:
         }
         return *this;
     }
+    //***Function to create a standard deck of 52 cards in random order
+    void createDeck()
+    {
+        while (!empty()) //clear old game deck if playing a new game
+        {
+            if (head != NULL)
+            {
+                cardNode* tmp = head;
+                head = head->next;
+                if (head == NULL)
+                    tail = NULL;
+                delete tmp;
+            }
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 1; j < 14; j++)
+            {
+                if (i == 0)
+                    insertCard(j, HEARTS);
+                if (i == 1)
+                    insertCard(j, SPADES);
+                if (i == 2)
+                    insertCard(j, DIAMONDS);
+                if (i == 3)
+                    insertCard(j, CLUBS);
+            }
+        }
+        //randomize list
+        //use random number generator to get random "index"
+        srand(time(nullptr));
+        //remove node and insert
+        for(int i=0; i<100;i++){
+            int randomIndex = rand() % 51;
+            cardNode *tmp = this->head;
+            cardNode * previous = nullptr;
+            for(int i = 0; i< randomIndex; i++){
+                //increment tmp and previous
+                previous = tmp;
+                tmp = tmp->next;
+            }
+            //delete node
+            if(tmp == head) {//remove head
+                if (tmp == tail) {//removing last node in the list
+                    head = tail = nullptr;
+                }else{
+                    head = tmp->next;
+                }
+            }else if(tmp == tail){//remove tail
+                tail = previous;
+                tail->next = nullptr;
+            }else{//remove middle
+                previous->next = tmp->next;
+            }
+            //insert the removed node in beginning of list
+            insertCard(tmp->number, tmp->suit);
+            delete tmp;
+            previous = nullptr;
+            delete previous;
+        }
+    }
     //deck only has to insert at the tail
-    void insertCard(char value, char suit){
+    void insertCard(int value, char suit){
         cardNode * newCard = new cardNode(value, suit);
         if(head == nullptr){//empty deck
         head = tail = newCard;
@@ -122,7 +196,7 @@ public:
     //insert seven cards from deck into player hands
     void deal(Deck &globalDeck) {
         for(int i = 0; i < 7; i++){//insert seven times from deck
-            char value = globalDeck.peek()->number;
+            int value = globalDeck.peek()->number;
             char suit = globalDeck.peek()->suit;
             //insert drawn card into player hands
             this->insertCard(value, suit);
@@ -138,7 +212,7 @@ public:
             return false;
         }else{//not empty deck
             //create new card node to insert into players hands
-            char value = globalDeck.peek()->number;
+            int value = globalDeck.peek()->number;
             char suit = globalDeck.peek()->suit;
             //insert drawn card into player hands
             this->insertCard(value, suit);
@@ -151,9 +225,9 @@ public:
     //need to find Card from each players hand
     //find function only looks at number value and not suit since
     //number value is what creates a match in GoFish
-    bool find(playerHands otherPlayer, char valueToFind) {
+    bool find(int valueToFind) {
         //start iterating at beginning of players list
-        cardNode * tmp = otherPlayer.head;
+        cardNode * tmp = this->head;
         while(tmp->next != nullptr){
             if(tmp->number == valueToFind){
                 //return true if found
@@ -167,7 +241,7 @@ public:
     }
 
     //need to override inherited remove
-    bool remove(char valueToRemove, char suitToRemove){
+    bool remove(int valueToRemove, char suitToRemove){
         //can remove from anywhere in linked list
         cardNode *tmp = this->head;
         cardNode * previous = nullptr;
@@ -203,3 +277,12 @@ public:
         return false;
     }
 };
+int main() {
+    Deck gameDeck;
+    gameDeck.createDeck();
+    cout << "deck: ";
+    gameDeck.printList();
+
+
+    return 0;
+}
