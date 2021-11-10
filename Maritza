@@ -105,7 +105,6 @@ public:
         //remove node and insert
         for(int i=0; i<100;i++){
             int randomIndex = rand() % 50 +1;
-            cout << randomIndex << " ";
             cardNode *tmp = this->head;
             cardNode * previous = nullptr;
             for(int i = 0; i< randomIndex; i++){
