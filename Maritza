@@ -104,27 +104,17 @@ public:
         srand(time(nullptr));
         //remove node and insert
         for(int i=0; i<100;i++){
-            int randomIndex = rand() % 51;
+            int randomIndex = rand() % 50 +1;
+            cout << randomIndex << " ";
             cardNode *tmp = this->head;
             cardNode * previous = nullptr;
             for(int i = 0; i< randomIndex; i++){
                 //increment tmp and previous
+                //will only ever remove card from middle of deck
                 previous = tmp;
                 tmp = tmp->next;
             }
-            //delete node
-            if(tmp == head) {//remove head
-                if (tmp == tail) {//removing last node in the list
-                    head = tail = nullptr;
-                }else{
-                    head = tmp->next;
-                }
-            }else if(tmp == tail){//remove tail
-                tail = previous;
-                tail->next = nullptr;
-            }else{//remove middle
                 previous->next = tmp->next;
-            }
             //insert the removed node in beginning of list
             insertCard(tmp->number, tmp->suit);
             delete tmp;
