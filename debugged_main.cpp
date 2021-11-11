@@ -8,6 +8,8 @@
 #include <string>
 #include <random>
 #include <ctime>
+#include <stdlib.h>
+
 
 /* TO DO
 Create Deck of 52 randomized cards***
@@ -28,12 +30,6 @@ using namespace std;
 #define SPADES 's'
 #define DIAMONDS 'd'
 #define CLUBS 'c'
-
- struct Card {       //makes card a data structure
-    char suit;
-    int number;
-}; //Unnecessary? 
-
 
 class Deck{
 protected:
@@ -106,7 +102,7 @@ public:
     {
         cardNode* tmp = head;
         int size = 0;
-        while (tmp != NULL)
+        while (tmp != nullptr)
         {
             size++;
             tmp = tmp->next;
@@ -118,16 +114,16 @@ public:
     {
         while (!empty()) //clear old game deck if playing a new game
         {
-            if (head != NULL)
+            if (head != nullptr)
             {
                 cardNode* tmp = head;
                 head = head->next;
-                if (head == NULL)
-                    tail = NULL;
+                if (head == nullptr)
+                    tail = nullptr;
                 delete tmp;
             }
         }
-        
+
         for (int i = 0; i < 4; i++)
         {
             for (int j = 1; j < 14; j++)
@@ -142,14 +138,33 @@ public:
                     insertCard(j, CLUBS);
             }
         }
-        //***Randomize Deck
+        //randomize list
+        //use random number generator to get random "index"
+        srand(time(nullptr));
+        //remove node and insert
+        for(int i=0; i<100;i++){
+            int randomIndex = rand() % 50 +1;
+            cardNode *tmp = this->head;
+            cardNode * previous = nullptr;
+            for(int i = 0; i< randomIndex; i++){
+                //increment tmp and previous
+                previous = tmp;
+                tmp = tmp->next;
+            }
+            previous->next = tmp->next;
+            //insert the removed node in beginning of list
+            insertCard(tmp->number, tmp->suit);
+            delete tmp;
+            previous = nullptr;
+            delete previous;
+        }
     }
 
     //deck only has to insert at the tail
     void insertCard(int value, char suit){
         cardNode * newCard = new cardNode(value, suit);
         if(head == nullptr){//empty deck
-        head = tail = newCard;
+            head = tail = newCard;
         }else{//not empty deck
             //only need to append at the end of the deck
             tail->next = newCard;
@@ -200,8 +215,8 @@ class PlayerHands: public Deck {
 public:
     //default constructor
     PlayerHands(){
-    head = nullptr;
-    tail = nullptr;
+        head = nullptr;
+        tail = nullptr;
     }
 
     //can use inherited insert
@@ -234,7 +249,7 @@ public:
             return true;
         }
     }
-    
+
     //return card value of most recently drawn card in hand
     int checkNewCard()
     {
@@ -292,7 +307,7 @@ public:
         cardNode * previous = nullptr;
         while(tmp->next != nullptr){//loop through list until node is found
             if((tmp->number == valueToRemove) &&
-            (tmp->suit == suitToRemove)){
+               (tmp->suit == suitToRemove)){
                 //card found now remove it
 
                 if(tmp == head) {//remove head
@@ -369,11 +384,11 @@ public:
 //A Player represents a player in the game
 class Player {
 public:
-  //Game* game;
+    //Game* game;
     PlayerHands* myHand;
     int playerID;
     int score;
-    public:
+public:
     Player(int id = 0)
     {
         //this->game = game;
@@ -385,21 +400,21 @@ public:
 
     //Returns the playerID of this Player
     int getID()
-  {
-      return this->playerID;
-  }
+    {
+        return this->playerID;
+    }
 
     //Returns the hand of this Player
     PlayerHands* getHand()
-  {
-    return myHand;
-  }
+    {
+        return myHand;
+    }
 
     int getScore()
     {
         return score;
     }
-    
+
     //Function handling asking for an opponent's card
     //Takes input for human player's turn
     //Overriden in ConsolePlayer for CPU logic
@@ -409,10 +424,10 @@ public:
         int response = -1;
 
         do { //receive user input
-        cout << "What card would you like to ask for?" << endl;
-        cin >> response;
-        if (myHand->find(response) == false) //***Allows asking for card we don't have
-            cout << "Please choose a card in your hand." << endl;
+            cout << "What card would you like to ask for?" << endl;
+            cin >> response;
+            if (myHand->find(response) == false) //***Allows asking for card we don't have
+                cout << "Please choose a card in your hand." << endl;
         } while (myHand->find(response) == false);
 
         if (other->getHand()->find(response)) //opponent has asked card, take
@@ -424,7 +439,7 @@ public:
                 myHand->replace(other->getHand(), response);
             }
             keepTurn = true;
-        } 
+        }
         else //opponent does not have card, draw
         {
             cout << "Your opponent does not have this card, Go Fish!" << endl;
@@ -446,44 +461,44 @@ public:
 //Overrides functions taking user input to handle use by CPUs
 class ConsolePlayer : public Player {
 public:
-  ConsolePlayer(int id) : Player (id)
-  {
-  }
-  
-  bool ask(Player* other) //Computer logic for ask function
-  {
-    //Find card value with most occurrences in hand
-    //Ask random player for that card
-    bool keepTurn = false;
-
-    int askValue = myHand->mostCommon(); //get most common card value in hand
-    if (askValue < 0) //no card in hand has majority
+    ConsolePlayer(int id) : Player (id)
     {
-        askValue = myHand->peek()->number; //set value to ask to whatever is first card in hand
     }
 
-    if (other->getHand()->find(askValue)) //opponent has asked card, take it
+    bool ask(Player* other) //Computer logic for ask function
     {
-        while(other->getHand()->find(askValue)) //swap all the cards that match between hands //**Stuck in this loop
+        //Find card value with most occurrences in hand
+        //Ask random player for that card
+        bool keepTurn = false;
+
+        int askValue = myHand->mostCommon(); //get most common card value in hand
+        if (askValue < 0) //no card in hand has majority
         {
-            myHand->replace(other->getHand(), askValue);
-            cout << "replaced";
+            askValue = myHand->peek()->number; //set value to ask to whatever is first card in hand
         }
-        keepTurn = true;
-    } else //opponent does not have card, draw
-    {
-        cout << "Your opponent does not have this card, Go Fish!" << endl;
-        myHand->draw(globalDeck);
-        if (askValue == myHand->checkNewCard()) //if drawn card matches wish, keep turn
+
+        if (other->getHand()->find(askValue)) //opponent has asked card, take it
         {
-            cout << this->playerID << " drew their wish, they keep their turn!" << endl;
+            while(other->getHand()->find(askValue)) //swap all the cards that match between hands //**Stuck in this loop
+            {
+                myHand->replace(other->getHand(), askValue);
+                cout << "replaced";
+            }
             keepTurn = true;
+        } else //opponent does not have card, draw
+        {
+            cout << "Your opponent does not have this card, Go Fish!" << endl;
+            myHand->draw(globalDeck);
+            if (askValue == myHand->checkNewCard()) //if drawn card matches wish, keep turn
+            {
+                cout << this->playerID << " drew their wish, they keep their turn!" << endl;
+                keepTurn = true;
+            }
         }
-    }
-    if(myHand->book(askValue))
+        if(myHand->book(askValue))
             this->score++;
-    return keepTurn;
-  }
+        return keepTurn;
+    }
 
 };
 
@@ -519,109 +534,109 @@ public:
     }
 
 //Returns the Player currently taking their turn
-Player* currentlyPlayingPlayer() 
-{
-    return getPlayerAtIndex(currentPlayer);
-}
+    Player* currentlyPlayingPlayer()
+    {
+        return getPlayerAtIndex(currentPlayer);
+    }
 
 //Returns the Player at the given index in the players vector
-Player* getPlayerAtIndex(int index) 
-{
-    return players.at(index);
-}
+    Player* getPlayerAtIndex(int index)
+    {
+        return players.at(index);
+    }
 
 //Function to end a given game
-void endGame() 
-{
-    int winner = 0;
-    for (int i = 1; i < players.size(); i++)
+    void endGame()
     {
-        if (players[i]->getScore() > players[winner]->getScore())
-            winner = i;
+        int winner = 0;
+        for (int i = 1; i < players.size(); i++)
+        {
+            if (players[i]->getScore() > players[winner]->getScore())
+                winner = i;
             isOver = true;
+        }
+        cout << "Game Over!" << endl;
+        cout << "Player " << winner << " won, congrats!" <<endl;
     }
-    cout << "Game Over!" << endl;
-    cout << "Player " << winner << " won, congrats!" <<endl;
-}
 
 //Function covering a Player's turn
 //Decide whom to ask for a card
-void takeTurn(Player* playing) 
-{
-    bool valid = false;
-    int playerToAsk;
-    printGame();
-    if (humanPlaying) //3 players
+    void takeTurn(Player* playing)
     {
-        if (playing->getID() == 2) //human player, get user input
+        bool valid = false;
+        int playerToAsk;
+        printGame();
+        if (humanPlaying) //3 players
         {
-            
-            do {
-                cout << "Player " << playing->getID() << ", select a player to ask." << endl;
-                cin >> playerToAsk;
-                if(playerToAsk == playing->getID() || (playerToAsk >= numPlayers || playerToAsk < 0)) 
-                cout << "Please choose a valid player" << endl;
-                else
-                    valid = true;
-            }  while (!valid);
+            if (playing->getID() == 2) //human player, get user input
+            {
+
+                do {
+                    cout << "Player " << playing->getID() << ", select a player to ask." << endl;
+                    cin >> playerToAsk;
+                    if(playerToAsk == playing->getID() || (playerToAsk >= numPlayers || playerToAsk < 0))
+                        cout << "Please choose a valid player" << endl;
+                    else
+                        valid = true;
+                }  while (!valid);
+            }
+            else //CPU, randomly choose another player to ask
+            {
+                srand(time(NULL));
+                playerToAsk = rand() % 2;
+                //CPU1 = 0, CPU2 = 1, Human = 2
+                if ((playing->getID() == 0 && playerToAsk == 0) || (playing->getID() == 1 && playerToAsk == 1))
+                    playerToAsk++;
+            }
         }
-        else //CPU, randomly choose another player to ask
+        else //2 cpu's, must always ask the other player
         {
-            srand(time(NULL));
-            playerToAsk = rand() % 2;
-            //CPU1 = 0, CPU2 = 1, Human = 2
-            if ((playing->getID() == 0 && playerToAsk == 0) || (playing->getID() == 1 && playerToAsk == 1))
-                playerToAsk++;
+            if (playing->getID() == 0)
+                playerToAsk = 1;
+            else
+                playerToAsk = 0;
         }
+
+        turn(playing, getPlayerAtIndex(playerToAsk));
     }
-    else //2 cpu's, must always ask the other player
-    {
-        if (playing->getID() == 0)
-            playerToAsk = 1;
-        else
-            playerToAsk = 0;
-    }
-    
-    turn(playing, getPlayerAtIndex(playerToAsk));
-}
 
 //***Function to print game state
-void printGame()
-{
-    cout << "Current Game State" << endl;
-    cout << endl;
-    cout << "CPU1 has " << players[0]->getHand()->getSize() << " cards" << endl;
-    cout << endl;
-    cout << "CPU2 has " << players[1]->getHand()->getSize() << " cards" << endl;
-    cout << endl;
-    if (humanPlaying) //print Human's hand
+    void printGame()
     {
-        cout << "You currently have: " << endl;
-        players[2]->getHand()->printList();
+        cout << "Current Game State" << endl;
         cout << endl;
+        cout << "CPU1 has " << players[0]->getHand()->getSize() << " cards" << endl;
+        cout << endl;
+        cout << "CPU2 has " << players[1]->getHand()->getSize() << " cards" << endl;
+        cout << endl;
+        if (humanPlaying) //print Human's hand
+        {
+            cout << "You currently have: " << endl;
+            players[2]->getHand()->printList();
+            cout << endl;
+        }
+        return;
     }
-    return; 
-}
 
 
 //Function covering a Player's turn
 //Loop a Player's turn if they get to keep playing
 //Otherwise, incrment to next player
-void turn(Player* asking, Player* asked) 
-{
-    bool keepPlaying = asking->ask(asked);
-    if (keepPlaying)
-        takeTurn(asking);
-    else
+    void turn(Player* asking, Player* asked)
     {
-        int nextID = asking->getID();
-        nextID += 1; //increment to next player
-        if (nextID < numPlayers) //if next player does not overflow players vector
-            takeTurn(players[nextID]);
-        else //wrap back to start
-            takeTurn(players[0]);
+        bool keepPlaying = asking->ask(asked);
+        if (keepPlaying)
+            takeTurn(asking);
+        else
+        {
+            int nextID = asking->getID();
+            nextID += 1; //increment to next player
+            if (nextID < numPlayers) //if next player does not overflow players vector
+                takeTurn(players[nextID]);
+            else //wrap back to start
+                takeTurn(players[0]);
+        }
     }
-}
 };
 
 
@@ -643,13 +658,13 @@ int main ()
         do{
             game.takeTurn(game.currentlyPlayingPlayer());
         }while(!game.isOver);
-       
+
 
         cout << "Would you like to play again? (y/n)" << endl;
         cin >> goAgain;
         if (goAgain == 'y' || goAgain == 'n')
             newGame = true;
-        else   
+        else
             newGame = false;
     } while(newGame);
 
