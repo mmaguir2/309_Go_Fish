@@ -646,7 +646,7 @@ public:
     }
 
 //***Function to print game state
-    void printGame()
+      void printGame()
     {
         cout << endl;
         cout << "Current Game State" << endl;
@@ -659,7 +659,7 @@ public:
         cout << endl;
         if (humanPlaying) //print Human's hand
         {
-            cout << "You currently have: " << endl;
+            cout << "You currently have " << players[2]->getScore() << " books and your hand is: " << endl;
             players[2]->printList();
             cout << endl;
         }
