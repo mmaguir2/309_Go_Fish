@@ -668,6 +668,16 @@ public:
 //Otherwise, increment to next player
     void turn(Player* asking, Player* asked, Deck* globalDeck)
     {
+        int total = 0;
+        for (int i = 0; i < players.size(); i++)
+            total += players[i]->getScore();
+        
+        if (total >= 13)
+        {
+            endGame();
+            return;
+        }
+        
         bool keepPlaying = asking->ask(asked, globalDeck);
         if (keepPlaying)
             takeTurn(asking, globalDeck);
