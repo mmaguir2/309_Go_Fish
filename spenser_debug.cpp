@@ -191,10 +191,19 @@ public:
     bool empty(){
         return this->head == nullptr;
     }
-    void printList(){
+   void printList(){
         cardNode * tmp = head;
         while(tmp != nullptr){
-            cout << tmp->number << tmp->suit << ", " ;
+            cout << tmp->number;
+            if(tmp->suit =='h'){
+                cout << char(3) << ",";
+            }else if(tmp->suit =='d'){
+                cout << char(4) << ",";
+            }else if(tmp->suit =='s'){
+                cout << char(6) << ",";
+            }else{
+                cout << char(5) << ",";
+            }
             tmp = tmp->next;
         }
         cout << endl;
