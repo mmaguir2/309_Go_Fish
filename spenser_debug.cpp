@@ -1,4 +1,4 @@
-//ECE 309 Go Fish Project
+r//ECE 309 Go Fish Project
 //Team Vector
 //Spenser Geideman, Maritza Aguirre-Diaz, Tyler Karpowich
 
@@ -450,10 +450,9 @@ public:
         {
             cout << "Your opponent has this card!" << endl;
 
-            bool replaced = false;
             for (int i = 0; i < 3; i++) //swap all the cards that match between hands //****Trouble
             {
-                replaced = this->replace(other, response);
+                this->replace(other, response);
             }
             keepTurn = true;
         }
