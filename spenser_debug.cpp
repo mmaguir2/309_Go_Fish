@@ -12,7 +12,9 @@
 
 
 /* TO DO
-Slow CPU playthrough (Enter or time delay)
+Drawing into hand after hand is empty
+Removing from tail is broken
+always make sure to form books
 */
 
 using namespace std;
@@ -259,10 +261,11 @@ public:
         else
             return -1;
     }
+    
     //need to find Card from each player's hand
     //find function only looks at number value and not suit since
     //number value is what creates a match in GoFish
-    bool find(int valueToFind) { //***Problem Here?
+    bool find(int valueToFind) {
         //start iterating at beginning of players list
         cardNode * tmp = this->head;
         while(tmp != nullptr){
@@ -302,25 +305,30 @@ public:
     }
 
     //need to override inherited remove
-    bool remove(int valueToRemove, char suitToRemove){
+    bool remove(int valueToRemove, char suitToRemove){ //may not remove all
         //can remove from anywhere in linked list
         cardNode *tmp = this->head;
         cardNode * previous = nullptr;
-        while(tmp != nullptr){//loop through list until node is found
+        while(tmp != nullptr)
+        { //loop through list until node is found
             if((tmp->number == valueToRemove) &&
                (tmp->suit == suitToRemove)){
                 //card found now remove it
 
-                if(tmp == head) {//remove head
+                if(tmp == head) 
+                {//remove head
                     if (tmp == tail) {//removing last node in the list
                         head = tail = nullptr;
                     }else{
                         head = tmp->next;
                     }
-                }else if(tmp == tail){//remove tail
+                }else if(tmp == tail) //remove tail is broken
+                {//remove tail
                     tail = previous;
                     tail->next = nullptr;
-                }else{//remove middle
+                }
+                else
+                {//remove middle
                     previous->next = tmp->next;
                 }
                 delete tmp;
@@ -343,7 +351,7 @@ public:
     {
         cardNode * tmp = other->head;
         char cardSuit;
-        while(tmp->next != nullptr){
+        while(tmp != nullptr){
             if(tmp->number == value){//found
                 //return true if found
                 cardSuit = tmp->suit;
@@ -359,7 +367,7 @@ public:
 
     //Function to check if a hand has any books
     //If so, remove those cards and increment their score
-    bool book(int value)
+    bool book(int value) //Doesn't always remove card
     {
         cardNode *curr = this->head;
         int count = 0;
@@ -430,7 +438,7 @@ public:
         do { //receive user input
             cout << "What card would you like to ask for?" << endl;
             cin >> response;
-            if (!this->find(response)) //***Allows asking for card we don't have
+            if (!this->find(response))
                 cout << "Please choose a card in your hand." << endl;
         } while (!this->find(response));
 
@@ -438,10 +446,9 @@ public:
         {
             cout << "Your opponent has this card!" << endl;
 
-            bool replaced = false;
-            for (int i = 0; i < 3; i++) //swap all the cards that match between hands //****Trouble
+            for (int i = 0; i < 3; i++) //swap all the cards that match between hands
             {
-                replaced = this->replace(other, response);
+                this->replace(other, response);
             }
             keepTurn = true;
         }
@@ -454,6 +461,10 @@ public:
                 cout << "Congrats, you drew the card you wanted! Ask again!" << endl;
                 keepTurn = true;
             }
+            else
+                keepTurn = false;
+            if (this->book(response)) 
+                this->score++;
         }
         if(this->book(response))
             this->score++;
@@ -488,7 +499,6 @@ public:
         }
         
         cout << "CPU " << playerIndex << " asks for " << askValue << "'s" << endl;
-
         if (other->find(askValue)) //opponent has asked card, take it
         {
             for (int i = 0; i < 3; i++) //swap all the cards that match between hands //****Stuck in this loop
@@ -505,6 +515,8 @@ public:
                 cout << this->playerID << " drew their wish, they keep their turn!" << endl;
                 keepTurn = true;
             }
+            else
+                keepTurn = false;
         }
         if(this->book(askValue))
             this->score++;
@@ -646,7 +658,7 @@ public:
     }
 
 //***Function to print game state
-      void printGame()
+    void printGame()
     {
         cout << endl;
         cout << "Current Game State" << endl;
@@ -665,6 +677,7 @@ public:
         }
     }
 
+
 //Function covering a Player's turn
 //Loop a Player's turn if they get to keep playing
 //Otherwise, increment to next player
@@ -679,7 +692,6 @@ public:
             endGame();
             return;
         }
-        
         bool keepPlaying = asking->ask(asked, globalDeck);
         if (keepPlaying)
             takeTurn(asking, globalDeck);
@@ -716,7 +728,7 @@ int main ()
         do{
             game.takeTurn(game.currentlyPlayingPlayer(), gameDeck);
         }while(!game.isOver);
-
+        
         cout << "Would you like to play again? (y/n)" << endl;
         cin >> goAgain;
         if (goAgain == 'y' || goAgain == 'n')
