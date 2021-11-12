@@ -306,7 +306,7 @@ public:
         //can remove from anywhere in linked list
         cardNode *tmp = this->head;
         cardNode * previous = nullptr;
-        while(tmp->next != nullptr){//loop through list until node is found
+        while(tmp != nullptr){//loop through list until node is found
             if((tmp->number == valueToRemove) &&
                (tmp->suit == suitToRemove)){
                 //card found now remove it
