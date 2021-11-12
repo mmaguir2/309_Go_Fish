@@ -194,20 +194,7 @@ public:
    void printList(){
         cardNode * tmp = head;
         while(tmp != nullptr){
-            if((tmp->number != 11) &&(tmp->number != 12) &&(tmp->number != 13) &&(tmp->number != 1)){
                 cout << tmp->number;
-            }else{
-                if(tmp->number ==11){
-                    cout << 'J';
-                }else if(tmp->number ==12){
-                    cout << 'Q';
-                }else if(tmp->number ==13){
-                    cout << 'K';
-                }else{
-                    cout << 'A';
-                }
-            }
-
             if(tmp->suit =='h'){
                 cout << char(3) << ",";
             }else if(tmp->suit =='d'){
