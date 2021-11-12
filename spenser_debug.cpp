@@ -450,12 +450,10 @@ public:
             cout << "Your opponent has this card!" << endl;
 
             bool replaced = false;
-            while(other->find(response)) //swap all the cards that match between hands //****Trouble
+            for (int i = 0; i < 3; i++) //swap all the cards that match between hands //****Trouble
             {
                 replaced = this->replace(other, response);
-                cout << "Replaced card? " << replaced << endl;
             }
-            cout << "TEST done replacing" << endl;
             keepTurn = true;
         }
         else //opponent does not have card, draw
@@ -504,14 +502,10 @@ public:
 
         if (other->find(askValue)) //opponent has asked card, take it
         {
-            int test = 0;
-            while(test < 1/*other->find(askValue)*/) //swap all the cards that match between hands //****Stuck in this loop
+            for (int i = 0; i < 3; i++) //swap all the cards that match between hands //****Stuck in this loop
             {
                 this->replace(other, askValue);
-                cout << "TEST replaced one" << endl;
-                test++;
             }
-            cout << "TEST done replacing" << endl;
             keepTurn = true;
         } else //opponent does not have card, draw
         {
