@@ -651,8 +651,11 @@ public:
         cout << endl;
         cout << "Current Game State" << endl;
         cout << endl;
-        cout << "CPU1 has " << players[0]->getSize() << " cards" << endl;
-        cout << "CPU2 has " << players[1]->getSize() << " cards" << endl;
+        cout << "CPU1 has " << players[0]->getSize() << " cards & " << players[0]->getScore() << " books" << endl; 
+        players[0]->printList();
+        cout << endl;
+        cout << "CPU2 has " << players[1]->getSize() << " cards & " << players[1]->getScore() << " books" << endl;
+        players[1]->printList();
         cout << endl;
         if (humanPlaying) //print Human's hand
         {
@@ -661,7 +664,6 @@ public:
             cout << endl;
         }
     }
-
 
 //Function covering a Player's turn
 //Loop a Player's turn if they get to keep playing
