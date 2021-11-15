@@ -12,9 +12,8 @@
 
 
 /* TO DO
-Drawing into hand after hand is empty
-Removing from tail is broken
-always make sure to form books
+Tell the user what card they've drawn
+Entering multiple inputs bricks the game
 */
 
 using namespace std;
@@ -38,11 +37,13 @@ protected:
     cardNode *head;
     cardNode *tail;
 public:
+    
     //default constructor
     Deck(){
         head = nullptr;
         tail = nullptr;
     }
+    
     //destructor
     ~Deck(){
         while(!empty()){
@@ -58,6 +59,7 @@ public:
             }
         }
     }
+    
     //copy constructor
     Deck(const Deck& other){
         head = nullptr;
@@ -68,6 +70,7 @@ public:
             tmp = tmp->next;
         }
     }
+    
     //copy assignment operator
     Deck& operator=(const Deck &other){
         //if assigning to the same object do nothing
@@ -83,16 +86,8 @@ public:
         }
         return *this;
     }
-/*
-    int getValue(cardNode* card)
-    {
-        return card->number;
-    }
-    char getSuit(cardNode* card)
-    {
-        return card->suit;
-    }
-    */
+
+    //return size of this Deck
     int getSize()
     {
         cardNode* tmp = head;
@@ -104,6 +99,7 @@ public:
         }
         return size;
     }
+    
     //Function to create a standard deck of 52 cards in random order
     void createDeck()
     {
@@ -166,6 +162,7 @@ public:
             tail = newCard;
         }
     }
+    
     //deck only has to remove from the head since players draw from top
     //but playerHands can remove from anywhere in the players group of cards
     // so removeCard will have to be overridden. This is why we are making
@@ -185,15 +182,20 @@ public:
             return true;//was able to remove
         }
     }
+    
     //need a peek function to know what the values of the card on the top are
     cardNode* peek(){//cant call peek on empty list
         //head is always at the top of the deck
         return head;
     }
+
+    //returns if list is empty
     bool empty(){
         return this->head == nullptr;
     }
-   void printList(){
+
+    //prints list to console
+    void printList(){
         cardNode * tmp = head;
         while(tmp != nullptr){
           
@@ -235,6 +237,7 @@ public:
             globalDeck->removeCard();
         }
     }
+    
     //draw one card from deck, print value drawn
     bool draw(Deck* globalDeck) {
         //check if empty deck
@@ -404,12 +407,12 @@ protected:
     int playerID;
     int score;
 public:
+    
     //default constructor
     Player(int id = 0)
     {
         playerID = id;
         score = 0;
-
     }
 
     //Returns the playerID of this Player
@@ -418,12 +421,6 @@ public:
         return this->playerID;
     }
 
-    //Returns the hand of this Player
-    /*PlayerHands* getHand()
-    {
-        return myHand;
-    }
-*/
     int getScore()
     {
         return this->score;
@@ -436,7 +433,7 @@ public:
     {
         bool keepTurn = false;
         int response = -1;
-        char moveOn;
+        string moveOn;
 
         do { //receive user input
             cout << "What card would you like to ask for?" << endl;
@@ -457,8 +454,9 @@ public:
         }
         else //opponent does not have card, draw
         {
-            cout << "Your opponent does not have this card, Go Fish!" << endl;
+            cout << "Go Fish!" << endl;
             this->draw(globalDeck);
+            cout << "You drew a " << this->checkNewCard() << endl;
             if (response == this->checkNewCard()) //if drawn card matches wish, keep turn
             {
                 cout << "Congrats, you drew the card you wanted! Ask again!" << endl;
@@ -483,6 +481,7 @@ public:
 //Overrides functions taking user input to handle use by CPUs
 class ConsolePlayer : public Player {
 public:
+    
     ConsolePlayer(int id) : Player (id)
     {
     }
@@ -504,7 +503,7 @@ public:
         cout << "CPU " << playerIndex << " asks for " << askValue << "'s" << endl;
         if (other->find(askValue)) //opponent has asked card, take it
         {
-            for (int i = 0; i < 3; i++) //swap all the cards that match between hands //****Stuck in this loop
+            for (int i = 0; i < 3; i++) //swap all the cards that match between hands
             {
                 this->replace(other, askValue);
             }
@@ -515,14 +514,13 @@ public:
             this->draw(globalDeck);
             if (askValue == this->checkNewCard()) //if drawn card matches wish, keep turn
             {
-                cout << this->playerID << " drew their wish, they keep their turn!" << endl;
+                cout << "CPU " << this->playerID++ << " drew their wish, they keep their turn!" << endl;
                 keepTurn = true;
             }
             else
                 keepTurn = false;
             if(this->book(this->checkNewCard()))
                 this->score++;
-        //************may need for human
         }
         if(this->book(askValue))
             this->score++;
@@ -538,7 +536,8 @@ public:
 //Contains the functions to play the game
 class Game {
 public:
-    Deck * gameDeckk;
+    
+    Deck * gameDeck;
     int numPlayers;
     int currentPlayer;
     bool isOver;            //checks game isn't over
@@ -551,7 +550,7 @@ public:
         currentPlayer = CurrentPlayer;
         isOver = isGameOver;
         humanPlaying = isHumanPlaying;
-        gameDeckk = gameD;
+        gameDeck = gameD;
 
     }
     //cant do all this in default constructor, should set up game in a function
@@ -560,20 +559,20 @@ public:
         ConsolePlayer* cpu1 = new ConsolePlayer(0);
         ConsolePlayer* cpu2 = new ConsolePlayer(1);
 
-        char human;
+        string human;
         cout << "Is there a human playing? (y/n)" << endl;
         cin >> human;
         players.push_back(cpu1);
-        cpu1->deal(gameDeckk);
+        cpu1->deal(gameDeck);
         players.push_back(cpu2);
-        cpu2->deal(gameDeckk);
-        if (human == 'y' || human == 'Y')
+        cpu2->deal(gameDeck);
+        if (human == "y" || human == "Y")
         {
             numPlayers = 3;
             humanPlaying = true;
             Player* humanPlayer = new Player(2);
             players.push_back(humanPlayer);
-            humanPlayer->deal(gameDeckk);
+            humanPlayer->deal(gameDeck);
         }
         else
         {
@@ -604,7 +603,12 @@ public:
             isOver = true;
         }
         cout << "Game Over!" << endl;
-        cout << "Player " << winner+1 << " won, congrats!" <<endl;
+        if (winner == 0) //CPU1
+            cout << "CPU 1 wins, too bad!" <<endl;
+        else if (winner == 1) //CPU2
+            cout << "CPU 2 wins, tough luck!" <<endl;
+        else
+            cout << "You win, congrats!" <<endl;
     }
 
 //Function covering a Player's turn
@@ -731,13 +735,9 @@ public:
 
 int main ()
 {
-    //Computer Logic Loop
-    //Print win condition
-    //Print hand (in Player)
-    //Initialize Players
     srand(time(nullptr));
     bool newGame = false;
-    char goAgain;
+    string goAgain;
 
     do {
         Deck* gameDeck = new Deck();
@@ -751,10 +751,13 @@ int main ()
         
         cout << "Would you like to play again? (y/n)" << endl;
         cin >> goAgain;
-        if (goAgain == 'y' || goAgain == 'n')
+        if (goAgain == "y" || goAgain == "Y")
             newGame = true;
         else
+        {
             newGame = false;
+            cout << "Thanks for playing!" << endl;
+        }
     } while(newGame);
 
     return 0;
