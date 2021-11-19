@@ -229,6 +229,8 @@ public:
     //insert seven cards from deck into player hands
     void deal(Deck* globalDeck) {
         for(int i = 0; i < 7; i++){//insert seven times from deck
+            if(globalDeck->empty())
+                return;
             int value = globalDeck->peek()->number;
             char suit = globalDeck->peek()->suit;
             //insert drawn card into player hands
