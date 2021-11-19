@@ -715,7 +715,8 @@ public:
                 endGame();
                 return;
             } else {
-                asking->draw(globalDeck);
+                asking->deal(globalDeck);
+                printGame();
             }
         }
         bool keepPlaying = asking->ask(asked, globalDeck);
