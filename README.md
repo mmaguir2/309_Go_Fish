@@ -24,8 +24,8 @@ For this project we decided to model the card game 'Go Fish.' We implemented the
   - When a player holds all four cards of a specific value in their hand, they announce the formation of a book, gain a point, and discard those cards
   - If at any point a player runs out of cards in their hand, they draw up to seven more cards from the deck to refill their hand (this does not take up their turn)
     - If there are fewer than seven cards in their deck, the drawing player takes all the remaining cards
-    - If there are no more cards in the deck, the player can no longer take their turn
-  - The game ends when all 13 books have been formed
+    - If there are no more cards in the deck, the game ends
+  - The game ends when all 13 books have been formed or when the deck is empty and a player has run out of cards
     - The player with the most books wins the game
 
 There are no additional files needed to compile and run this code, nor any particular requirements for compilation. There are no software dependencies
