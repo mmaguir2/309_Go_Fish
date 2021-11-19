@@ -508,13 +508,15 @@ public:
                 this->replace(other, askValue);
             }
             keepTurn = true;
-        } else //opponent does not have card, draw
+                } else //opponent does not have card, draw
         {
             cout << "Go Fish!" << endl;
             this->draw(globalDeck);
+            int currentPlayer = this->playerID;
+            currentPlayer++;
             if (askValue == this->checkNewCard()) //if drawn card matches wish, keep turn
             {
-                cout << "CPU " << this->playerID++ << " drew their wish, they keep their turn!" << endl;
+                cout << "CPU " << currentPlayer << " drew their wish, they keep their turn!" << endl;
                 keepTurn = true;
             }
             else
