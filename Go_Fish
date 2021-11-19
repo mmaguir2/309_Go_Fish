@@ -684,10 +684,10 @@ public:
         cout << "Current Game State" << endl;
         cout << endl;
         cout << "CPU1 has " << players[0]->getSize() << " cards & " << players[0]->getScore() << " books" << endl; 
-        players[0]->printList();
+        if(players[2] == NULL) players[0]->printList();
         cout << endl;
         cout << "CPU2 has " << players[1]->getSize() << " cards & " << players[1]->getScore() << " books" << endl;
-        players[1]->printList();
+        if(players[2] == NULL) players[1]->printList();
         cout << endl;
         if (humanPlaying) //print Human's hand
         {
