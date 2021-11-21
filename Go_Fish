@@ -1,6 +1,6 @@
 //ECE 309 Go Fish Project
 //Team Vector
-//Spenser Geideman, Maritza Aguirre-Diaz, Tyler Karpowich
+//Contrubuters: Spenser Geideman, Maritza Aguirre-Diaz, Tyler Karpowich
 
 #include <iostream>
 #include <vector>
@@ -10,12 +10,6 @@
 #include <ctime>
 #include <stdlib.h>
 
-
-/* TO DO
-Tell the user what card they've drawn
-Entering multiple inputs bricks the game
-*/
-
 using namespace std;
 
 //define suits
@@ -24,10 +18,11 @@ using namespace std;
 #define DIAMONDS 'd'
 #define CLUBS 'c'
 
+
 class Deck{
 protected:
     //our deck and players hands will be a linked list
-    class cardNode{//card has a number and suit
+    class cardNode{//card has a number and suit (Maritza)
     public:
         cardNode(int n, char s):number(n), suit(s), next(nullptr){}
         int number;
@@ -39,13 +34,13 @@ protected:
 public:
     
     //default constructor
-    Deck(){
+    Deck(){//(Maritza)
         head = nullptr;
         tail = nullptr;
     }
     
     //destructor
-    ~Deck(){
+    ~Deck(){//(Maritza)
         while(!empty()){
             //remove card from head only if not an empty list
             if (head == nullptr){//empty list
@@ -61,7 +56,7 @@ public:
     }
     
     //copy constructor
-    Deck(const Deck& other){
+    Deck(const Deck& other){//(Maritza)
         head = nullptr;
         tail = nullptr;
         cardNode * tmp = other.head;
@@ -72,7 +67,7 @@ public:
     }
     
     //copy assignment operator
-    Deck& operator=(const Deck &other){
+    Deck& operator=(const Deck &other){//(Maritza)
         //if assigning to the same object do nothing
         if(this == &other){
             return *this;
@@ -88,7 +83,7 @@ public:
     }
 
     //return size of this Deck
-    int getSize()
+    int getSize()//(Maritza)
     {
         cardNode* tmp = head;
         int size = 0;
@@ -101,7 +96,7 @@ public:
     }
     
     //Function to create a standard deck of 52 cards in random order
-    void createDeck()
+    void createDeck()//(Maritza/Spenser)
     {
         while (!empty()) //clear old game deck if playing a new game
         {
@@ -129,7 +124,7 @@ public:
                     insertCard(j, CLUBS);
             }
         }
-        //randomize list
+        //randomize list(Maritza)
         //use random number generator to get random "index"
         srand(time(nullptr));
         //remove node and insert
@@ -152,7 +147,7 @@ public:
     }
 
     //deck only has to insert at the tail
-    void insertCard(int value, char suit){
+    void insertCard(int value, char suit){//(Maritza)
         cardNode * newCard = new cardNode(value, suit);
         if(head == nullptr){//empty deck
             head = tail = newCard;
@@ -167,7 +162,7 @@ public:
     //but playerHands can remove from anywhere in the players group of cards
     // so removeCard will have to be overridden. This is why we are making
     // removeCard virtual.
-    virtual bool removeCard() {
+    virtual bool removeCard() {//(Maritza)
         //remove card from head only if not an empty list
         //remove card from head only if not an empty list
         if (head == nullptr){//empty list
@@ -184,18 +179,18 @@ public:
     }
     
     //need a peek function to know what the values of the card on the top are
-    cardNode* peek(){//cant call peek on empty list
+    cardNode* peek(){//cant call peek on empty list(Maritza)
         //head is always at the top of the deck
         return head;
     }
 
     //returns if list is empty
-    bool empty(){
+    bool empty(){//(Maritza)
         return this->head == nullptr;
     }
 
     //prints list to console
-    void printList(){
+    void printList(){//(Maritza)
         cardNode * tmp = head;
         while(tmp != nullptr){
           
@@ -219,7 +214,7 @@ public:
 class PlayerHands: public Deck {
 public:
     //default constructor
-    PlayerHands(){
+    PlayerHands(){//(Maritza)
         head = nullptr;
         tail = nullptr;
     }
@@ -227,7 +222,7 @@ public:
     //can use inherited insert
 
     //insert seven cards from deck into player hands
-    void deal(Deck* globalDeck) {
+    void deal(Deck* globalDeck) {//(Maritza)
         for(int i = 0; i < 7; i++){//insert seven times from deck
             if(globalDeck->empty())
                 return;
@@ -241,7 +236,7 @@ public:
     }
     
     //draw one card from deck, print value drawn
-    bool draw(Deck* globalDeck) {
+    bool draw(Deck* globalDeck) {//(Maritza)
         //check if empty deck
         if(globalDeck->peek() == nullptr){
             cout << "empty deck" << endl;
@@ -270,7 +265,7 @@ public:
     //need to find Card from each player's hand
     //find function only looks at number value and not suit since
     //number value is what creates a match in GoFish
-    bool find(int valueToFind) {
+    bool find(int valueToFind) {//(Maritza)
         //start iterating at beginning of players list
         cardNode * tmp = this->head;
         while(tmp != nullptr){
@@ -313,7 +308,7 @@ public:
     }
 
     //need to override inherited remove
-    bool remove(int valueToRemove, char suitToRemove){ //may not remove all
+    bool remove(int valueToRemove, char suitToRemove){ //may not remove all(Maritza)
         //can remove from anywhere in linked list
         cardNode *tmp = this->head;
         cardNode * previous = nullptr;
@@ -346,16 +341,11 @@ public:
             previous = tmp;
             tmp = tmp->next;
         }
-        //delete nodes created
-        //delete tmp;
-        //previous = nullptr;
-        //delete previous;
-        //return false if not found
         return false;
     }
 
     //Function to remove card from other's hand and insert into this Player's hand
-    bool replace(PlayerHands* other, int value)
+    bool replace(PlayerHands* other, int value)//(Maritza)
     {
         cardNode * tmp = other->head;
         char cardSuit;
@@ -365,7 +355,6 @@ public:
                 cardSuit = tmp->suit;
                 other->remove(value, cardSuit);
                 this->insertCard(value, cardSuit);
-                //delete tmp;
                 return true;
             }
             tmp = tmp->next;
@@ -404,7 +393,6 @@ public:
 //player is a playerHand
 class Player: public PlayerHands {
 protected:
-    //PlayerHands* myHand;
     //player needs a score and id
     int playerID;
     int score;
@@ -484,9 +472,7 @@ public:
 class ConsolePlayer : public Player {
 public:
     
-    ConsolePlayer(int id) : Player (id)
-    {
-    }
+    ConsolePlayer(int id) : Player (id){}
 
     bool ask(Player* other, Deck* globalDeck) //Computer logic for ask function
     {
@@ -540,15 +526,14 @@ public:
 //Contains the functions to play the game
 class Game {
 public:
-    
     Deck * gameDeck;
     int numPlayers;
     int currentPlayer;
     bool isOver;            //checks game isn't over
     bool humanPlaying;
-
     vector<Player*> players;
-    //default constructor (missing Maritza Added)
+    
+    //default constructor (Maritza)
     Game(Deck* gameD = nullptr, int totalPlayers = 0, int CurrentPlayer = 0, bool isGameOver = false, bool isHumanPlaying = false){
         numPlayers = totalPlayers;
         currentPlayer = CurrentPlayer;
@@ -557,7 +542,7 @@ public:
         gameDeck = gameD;
 
     }
-    //cant do all this in default constructor, should set up game in a function
+    
     void gameSetUP()
     {
         ConsolePlayer* cpu1 = new ConsolePlayer(0);
