@@ -32,7 +32,7 @@ protected:
     cardNode *head;
     cardNode *tail;
 public:
-    
+
     //default constructor
     Deck(){//(Maritza)
         head = nullptr;
@@ -54,7 +54,7 @@ public:
             }
         }
     }
-    
+
     //copy constructor
     Deck(const Deck& other){//(Maritza)
         head = nullptr;
@@ -65,7 +65,7 @@ public:
             tmp = tmp->next;
         }
     }
-    
+
     //copy assignment operator
     Deck& operator=(const Deck &other){//(Maritza)
         //if assigning to the same object do nothing
@@ -94,7 +94,7 @@ public:
         }
         return size;
     }
-    
+
     //Function to create a standard deck of 52 cards in random order
     void createDeck()//(Maritza/Spenser)
     {
@@ -126,9 +126,9 @@ public:
         }
         //randomize list(Maritza)
         srand(time(nullptr));
-        
+
         for(int i=0; i<100;i++){
-         //use random number generator to get random "index"
+            //use random number generator to get random "index"
             int randomIndex = rand() % 50 +1;
             cardNode *tmp = this->head;
             cardNode * previous = nullptr;
@@ -159,7 +159,7 @@ public:
             tail = newCard;
         }
     }
-    
+
     //deck only has to remove from the head since players draw from top
     //but playerHands can remove from anywhere in the players group of cards
     // so removeCard will have to be overridden. This is why we are making
@@ -178,7 +178,7 @@ public:
             return true;//was able to remove
         }
     }
-    
+
     //need a peek function to know what the values of the card on the top are
     cardNode* peek(){//cant call peek on empty list(Maritza)
         //head is always at the top of the deck
@@ -197,7 +197,7 @@ public:
         //loop through list beginning at the head
         //print number and suit
         while(tmp != nullptr){
-                cout << tmp->number;
+            cout << tmp->number;
             if(tmp->suit =='h'){
                 cout << char(3) << ",";
             }else if(tmp->suit =='d'){
@@ -237,7 +237,7 @@ public:
             globalDeck->removeCard();
         }
     }
-    
+
     //draw one card from deck, print value drawn
     bool draw(Deck* globalDeck) {//(Maritza)
         //check if empty deck
@@ -264,7 +264,7 @@ public:
         else
             return -1;
     }
-    
+
     //need to find Card from each player's hand
     //find function only looks at number value and not suit since
     //number value is what creates a match in GoFish
@@ -311,7 +311,7 @@ public:
     }
 
     //need to override inherited remove
-    bool remove(int valueToRemove, char suitToRemove){ //(Maritza)
+    bool removeCard(int valueToRemove, char suitToRemove){ //(Maritza)
         //can remove from anywhere in linked list
         cardNode *tmp = this->head;
         cardNode * previous = nullptr;
@@ -321,7 +321,7 @@ public:
                (tmp->suit == suitToRemove)){
                 //card found now remove it
 
-                if(tmp == head) 
+                if(tmp == head)
                 {//remove head
                     if (tmp == tail) {//removing last node in the list
                         head = tail = nullptr;
@@ -356,13 +356,13 @@ public:
             if(tmp->number == value){//found
                 //return true if found
                 cardSuit = tmp->suit;
-                other->remove(value, cardSuit);
+                other->removeCard(value, cardSuit);
                 this->insertCard(value, cardSuit);
                 return true;
             }
             tmp = tmp->next;
         }
-    return false;
+        return false;
     }
 
     //Function to check if a hand has any books
@@ -381,10 +381,10 @@ public:
         }
         if (count == 4) //book is formed, remove cards from the hand
         {
-            remove(value, SPADES);
-            remove(value, DIAMONDS);
-            remove(value, HEARTS);
-            remove(value, CLUBS);
+            removeCard(value, SPADES);
+            removeCard(value, DIAMONDS);
+            removeCard(value, HEARTS);
+            removeCard(value, CLUBS);
             cout << "Book Formed!" << endl;
             return true;
         }
@@ -400,7 +400,7 @@ protected:
     int playerID;
     int score;
 public:
-    
+
     //default constructor
     Player(int id = 0)
     {
@@ -457,14 +457,14 @@ public:
             }
             else
                 keepTurn = false;
-             if(this->book(this->checkNewCard()))
+            if(this->book(this->checkNewCard()))
                 this->score++;
         }
         if(this->book(response))
             this->score++;
-        
+
         cout << "Press any key to continue " << endl;
-            cin >> moveOn;
+        cin >> moveOn;
         return keepTurn;
     }
 
@@ -474,7 +474,7 @@ public:
 //Overrides functions taking user input to handle use by CPUs
 class ConsolePlayer : public Player {
 public:
-    
+
     ConsolePlayer(int id) : Player (id){}
 
     bool ask(Player* other, Deck* globalDeck) //Computer logic for ask function
@@ -490,7 +490,7 @@ public:
         {
             askValue = this->peek()->number; //set value to ask to whatever is first card in hand
         }
-        
+
         cout << "CPU " << playerIndex << " asks for " << askValue << "'s" << endl;
         if (other->find(askValue)) //opponent has asked card, take it
         {
@@ -499,7 +499,7 @@ public:
                 this->replace(other, askValue);
             }
             keepTurn = true;
-                } else //opponent does not have card, draw
+        } else //opponent does not have card, draw
         {
             cout << "Go Fish!" << endl;
             this->draw(globalDeck);
@@ -517,9 +517,9 @@ public:
         }
         if(this->book(askValue))
             this->score++;
-        
+
         cout << "Press any key to continue " << endl;
-            cin >> moveOn;
+        cin >> moveOn;
         return keepTurn;
     }
 
@@ -535,7 +535,7 @@ public:
     bool isOver;            //checks game isn't over
     bool humanPlaying;
     vector<Player*> players;
-    
+
     //default constructor (Maritza)
     Game(Deck* gameD = nullptr, int totalPlayers = 0, int CurrentPlayer = 0, bool isGameOver = false, bool isHumanPlaying = false){
         numPlayers = totalPlayers;
@@ -545,7 +545,7 @@ public:
         gameDeck = gameD;
 
     }
-    
+
     void gameSetUP()
     {
         ConsolePlayer* cpu1 = new ConsolePlayer(0);
@@ -611,7 +611,7 @@ public:
         int playerToAsk;
         printGame();
         int playerPosition = playing->getID()+1; //Human-readable index of current player (i.e. index 0 == CPU 1)
-       // playerPosition++;
+        // playerPosition++;
 
         if (humanPlaying) //3 players
         {
@@ -629,7 +629,7 @@ public:
                 }  while (!valid);
             }
             else //CPU, randomly choose another player to ask
-            {       
+            {
                 srand(time(nullptr));
                 playerToAsk = rand() % 2;
                 //CPU1 = 0, CPU2 = 1, Human = 2
@@ -637,11 +637,11 @@ public:
                     playerToAsk++;
                 if (playerToAsk == 1){
                     cout << "CPU " << playerPosition << " asks CPU 2" << endl;
-                 } else if (playerToAsk == 0)
-                    {
-                        cout << "CPU " << playerPosition << " asks CPU 1" << endl;
-                    }
-                    
+                } else if (playerToAsk == 0)
+                {
+                    cout << "CPU " << playerPosition << " asks CPU 1" << endl;
+                }
+
                 else{
                     cout << "CPU " << playerPosition << " asks the Player" << endl;
                 }
@@ -659,7 +659,7 @@ public:
                 playerToAsk = 0;
                 cout << "CPU 2 asks CPU 1" << endl;
             }
-            
+
         }
 
         turn(playing, getPlayerAtIndex(playerToAsk), globalDeck);
@@ -671,7 +671,7 @@ public:
         cout << endl;
         cout << "Current Game State" << endl;
         cout << endl;
-        cout << "CPU1 has " << players[0]->getSize() << " cards & " << players[0]->getScore() << " books" << endl; 
+        cout << "CPU1 has " << players[0]->getSize() << " cards & " << players[0]->getScore() << " books" << endl;
         if(players[2] == NULL) players[0]->printList();
         cout << endl;
         cout << "CPU2 has " << players[1]->getSize() << " cards & " << players[1]->getScore() << " books" << endl;
@@ -694,7 +694,7 @@ public:
         int total = 0;
         for (int i = 0; i < players.size(); i++)
             total += players[i]->getScore();
-        
+
         if (total >= 13)
         {
             endGame();
@@ -741,7 +741,7 @@ int main ()
         do{
             game.takeTurn(game.currentlyPlayingPlayer(), gameDeck);
         }while(!game.isOver);
-        
+
         cout << "Would you like to play again? (y/n)" << endl;
         cin >> goAgain;
         if (goAgain == "y" || goAgain == "Y")
