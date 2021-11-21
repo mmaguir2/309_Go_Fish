@@ -348,7 +348,7 @@ public:
     }
 
     //Function to remove card from other's hand and insert into this Player's hand
-    bool replace(PlayerHands* other, int value)//(Maritza/Spenser)
+    bool replace(PlayerHands* other, int value)//
     {
         cardNode * tmp = other->head;
         char cardSuit;
