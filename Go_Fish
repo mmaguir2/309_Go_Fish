@@ -38,7 +38,7 @@ public:
         head = nullptr;
         tail = nullptr;
     }
-    
+    //implement rule of three for Deck class (Maritza)
     //destructor
     ~Deck(){//(Maritza)
         while(!empty()){
@@ -125,18 +125,20 @@ public:
             }
         }
         //randomize list(Maritza)
-        //use random number generator to get random "index"
         srand(time(nullptr));
-        //remove node and insert
+        
         for(int i=0; i<100;i++){
+         //use random number generator to get random "index"
             int randomIndex = rand() % 50 +1;
             cardNode *tmp = this->head;
             cardNode * previous = nullptr;
+            //loop through deck until card to remove is found by using randomIndex
             for(int j = 0; j< randomIndex; j++){
                 //increment tmp and previous
                 previous = tmp;
                 tmp = tmp->next;
             }
+            //remove node 
             previous->next = tmp->next;
             //insert the removed node in beginning of list
             insertCard(tmp->number, tmp->suit);
@@ -164,7 +166,6 @@ public:
     // removeCard virtual.
     virtual bool removeCard() {//(Maritza)
         //remove card from head only if not an empty list
-        //remove card from head only if not an empty list
         if (head == nullptr){//empty list
             //do nothing
             return false;//can't remove, empty deck
@@ -190,10 +191,12 @@ public:
     }
 
     //prints list to console
+    //using char(#) to print symbols
     void printList(){//(Maritza)
         cardNode * tmp = head;
+        //loop through list beginning at the head
+        //print number and suit
         while(tmp != nullptr){
-          
                 cout << tmp->number;
             if(tmp->suit =='h'){
                 cout << char(3) << ",";
@@ -221,7 +224,7 @@ public:
 
     //can use inherited insert
 
-    //insert seven cards from deck into player hands
+    //insert seven cards from top of deck into player hands
     void deal(Deck* globalDeck) {//(Maritza)
         for(int i = 0; i < 7; i++){//insert seven times from deck
             if(globalDeck->empty())
@@ -308,7 +311,7 @@ public:
     }
 
     //need to override inherited remove
-    bool remove(int valueToRemove, char suitToRemove){ //may not remove all(Maritza)
+    bool remove(int valueToRemove, char suitToRemove){ //(Maritza)
         //can remove from anywhere in linked list
         cardNode *tmp = this->head;
         cardNode * previous = nullptr;
@@ -345,7 +348,7 @@ public:
     }
 
     //Function to remove card from other's hand and insert into this Player's hand
-    bool replace(PlayerHands* other, int value)//(Maritza)
+    bool replace(PlayerHands* other, int value)//(Maritza/Spenser)
     {
         cardNode * tmp = other->head;
         char cardSuit;
@@ -364,7 +367,7 @@ public:
 
     //Function to check if a hand has any books
     //If so, remove those cards and increment their score
-    bool book(int value) //Doesn't always remove card
+    bool book(int value) //
     {
         cardNode *curr = this->head;
         int count = 0;
