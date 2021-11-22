@@ -254,7 +254,7 @@ public:
     }
 
     //return card value of most recently drawn card in hand
-    int checkNewCard()
+    int checkNewCard() //(Spenser)
     {
         if (tail != nullptr)
             return tail->number;
@@ -280,7 +280,7 @@ public:
     }
 
     //find majority card value in this player's hand
-    int mostCommon()
+    int mostCommon() //(Spenser)
     {
         cardNode* temp = head;
 
@@ -345,7 +345,7 @@ public:
     }
 
     //Function to remove card from other's hand and insert into this Player's hand
-    bool replace(PlayerHands* other, int value)//
+    bool replace(PlayerHands* other, int value) //(Spenser/Maritza)
     {
         cardNode * tmp = other->head;
         char cardSuit;
@@ -364,7 +364,7 @@ public:
 
     //Function to check if a hand has any books
     //If so, remove those cards and increment their score
-    bool book(int value) //
+    bool book(int value) //(Spenser)
     {
         cardNode *curr = this->head;
         int count = 0;
@@ -419,7 +419,7 @@ public:
     //Function handling asking for an opponent's card
     //Takes input for human player's turn
     //Overriden in ConsolePlayer for CPU logic
-    virtual bool ask(Player* other, Deck* globalDeck)
+    virtual bool ask(Player* other, Deck* globalDeck) //(Tyler/Spenser)
     {
         bool keepTurn = false;
         int response = -1;
@@ -469,12 +469,12 @@ public:
 
 //A ConsolePlayer is a Player
 //Overrides functions taking user input to handle use by CPUs
-class ConsolePlayer : public Player {
+class ConsolePlayer : public Player { //(Spenesr)
 public:
 
-    ConsolePlayer(int id) : Player (id){}
+    ConsolePlayer(int id) : Player (id){} //(Spenser/Maritza)
 
-    bool ask(Player* other, Deck* globalDeck) //Computer logic for ask function
+    bool ask(Player* other, Deck* globalDeck) //Computer logic for ask function (Spenser)
     {
         //Find card value with most occurrences in hand
         //Ask random player for that card
@@ -524,7 +524,7 @@ public:
 
 
 //Contains the functions to play the game
-class Game {
+class Game { //(Tyler)
 public:
     Deck * gameDeck;
     int numPlayers;
@@ -534,7 +534,7 @@ public:
     vector<Player*> players;
 
     //default constructor (Maritza)
-    Game(Deck* gameD = nullptr, int totalPlayers = 0, int CurrentPlayer = 0, bool isGameOver = false, bool isHumanPlaying = false){
+    Game(Deck* gameD = nullptr, int totalPlayers = 0, int CurrentPlayer = 0, bool isGameOver = false, bool isHumanPlaying = false){ //(Tyler)
         numPlayers = totalPlayers;
         currentPlayer = CurrentPlayer;
         isOver = isGameOver;
@@ -543,7 +543,7 @@ public:
 
     }
 
-    void gameSetUP()
+    void gameSetUP() //(Tyler)
     {
         ConsolePlayer* cpu1 = new ConsolePlayer(0);
         ConsolePlayer* cpu2 = new ConsolePlayer(1);
@@ -582,7 +582,7 @@ public:
     }
 
 //Function to end a given game
-    void endGame()
+    void endGame() //(Spenser)
     {
         int winner = 0;
         for (int i = 0; i < players.size(); i++)
@@ -602,7 +602,7 @@ public:
 
 //Function covering a Player's turn
 //Decide whom to ask for a card
-    void takeTurn(Player* playing, Deck* globalDeck)
+    void takeTurn(Player* playing, Deck* globalDeck) //(Tyler/Spenser)
     {
         bool valid = false;
         int playerToAsk;
@@ -663,7 +663,7 @@ public:
     }
 
 //***Function to print game state
-    void printGame()
+    void printGame() //(Spenser)
     {
         cout << endl;
         cout << "Current Game State" << endl;
@@ -686,7 +686,7 @@ public:
 //Function covering a Player's turn
 //Loop a Player's turn if they get to keep playing
 //Otherwise, increment to next player
-    void turn(Player* asking, Player* asked, Deck* globalDeck)
+    void turn(Player* asking, Player* asked, Deck* globalDeck) //(Tyler)
     {
         int total = 0;
         for (int i = 0; i < players.size(); i++)
@@ -723,7 +723,7 @@ public:
 
 
 
-int main ()
+int main () //(Spenser/Tyler/Maritza)
 {
     srand(time(nullptr));
     bool newGame = false;
