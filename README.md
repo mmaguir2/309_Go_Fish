@@ -3,11 +3,6 @@ Team Vector
 Group members/contributers: 
 Maritza Aguirre-Diaz, Spenser Geideman, Tyler Karpowich
 
-How to compile and run your code. List any software or system dependences (Linux/Windows, etc).
-Interesting features. 
-Status report on the code. If something doesn’t work, explain why.
-
-
 For this project we decided to model the card game 'Go Fish.' We implemented the game to allow either two computer players to play against each other such that they can be 'watched,' or to allow a human player to join in and play against these two CPUs. Our rule set is taken from Bicycle Cards (https://bicyclecards.com/how-to-play/go-fish/) and is as follows:
 
   - Use a standard 52 card deck of cards
